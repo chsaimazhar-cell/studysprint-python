@@ -1,45 +1,64 @@
-# StudySprint 📚
+# StudySprint CLI
 
-A beginner-friendly command-line study planner built with Python. Organize study tasks, set priorities and due dates, track completed work, and review your progress — all stored locally in a JSON file.
+A beginner-friendly command-line study planner built with Python. Add study tasks, set a priority and optional due date, mark tasks complete, delete tasks, and review your progress. Task data is saved locally in JSON.
 
-## Features
+## Features in the current command-line menu
 
-- Add, list, complete, edit, and delete study tasks
-- Set task priorities (low, medium, high) and optional due dates
-- Filter tasks by status
-- View a progress summary
-- Persist tasks in a local JSON file
-- Validate user input and handle missing or malformed data
-- Unit tests using Python's built-in `unittest`
+1. **Add task** — enter a title, priority, and optional due date.
+2. **List tasks** — display every saved task and its status.
+3. **Complete task** — mark a task as completed by its ID.
+4. **Delete task** — remove a task by its ID.
+5. **View progress** — show total, completed, remaining, and completion percentage.
+6. **Exit** — close the application.
+
+Priorities are `low`, `medium`, and `high`. Due dates use `YYYY-MM-DD`.
+
+> **Feature accuracy:** The current CLI menu does not include an edit-task option or a status-filter menu. The planner class has an internal `list_tasks(completed=...)` filtering method, but the command-line interface does not currently expose it.
 
 ## Requirements
 
-- Python 3.10 or newer
-- No third-party packages required
+- Python 3.10 or newer.
+- No third-party packages are required.
 
-## Quick start
+## Run on Windows
 
-```bash
-git clone https://github.com/chsaimazhar-cell/studysprint-python.git
-cd studysprint-python
+Open PowerShell in the project folder:
+
+```powershell
+py -m venv .venv
+.venv\Scripts\Activate.ps1
 python main.py
 ```
 
-On Windows, use `py main.py` if `python` is not recognized.
+If PowerShell blocks activation, use Command Prompt:
 
-## Example workflow
+```bat
+py -m venv .venv
+.venv\Scripts\activate.bat
+python main.py
+```
 
-1. Choose **Add task** from the menu.
-2. Enter a title, priority, and optional due date (`YYYY-MM-DD`).
-3. Choose **List tasks** to review your plan.
-4. Mark a task complete when you finish it.
-5. Open **Progress** to see your completion rate.
+No package installation step is needed because the project uses only the Python standard library.
+
+To leave the virtual environment, run `deactivate`.
+
+## Run on macOS or Linux
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python main.py
+```
 
 ## Run the tests
 
 ```bash
 python -m unittest discover -s tests -v
 ```
+
+## Data storage
+
+The application stores tasks in `tasks.json` beside `main.py`. The file is created automatically when a task is saved and is excluded from Git by `.gitignore`. Back it up if you want to preserve your study plan.
 
 ## Project structure
 
@@ -58,18 +77,10 @@ studysprint-python/
 └── README.md
 ```
 
-## Data and privacy
+## Learning concepts
 
-Tasks are saved in `tasks.json` in the project directory. This file is created automatically the first time the app saves data. It is excluded from Git so your personal study plan is not accidentally committed.
+This project demonstrates Python functions, classes, dataclasses, enums, lists, loops, conditions, exceptions, JSON serialization, file handling, and unit testing with `unittest`.
 
-## Roadmap
+## License
 
-- [ ] Add CSV export
-- [ ] Add weekly study goals
-- [ ] Build a graphical interface
-
-## Author
-
-**Saim.Tec** — Student developer learning Python and software development.
-
-If you find this project useful, consider giving the repository a ⭐.
+MIT. See [LICENSE](LICENSE).
