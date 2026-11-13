@@ -10,14 +10,14 @@ DATA_FILE = Path(__file__).with_name("tasks.json")
 
 def prompt_date() -> date | None:
     """Ask for an optional due date in YYYY-MM-DD format."""
-    raw = input("Due date (YYYY-MM-DD, leave blank for none): ").strip()
-    if not raw:
-        return None
-    try:
-        return date.fromisoformat(raw)
-    except ValueError:
-        print("Please enter a valid date, for example 2026-12-31.")
-        return prompt_date()
+    while True:
+        raw = input("Due date (YYYY-MM-DD, leave blank for none): ").strip()
+        if not raw:
+            return None
+        try:
+            return date.fromisoformat(raw)
+        except ValueError:
+            print("Please enter a valid date, for example 2026-12-31.")
 
 
 def show_tasks(planner: StudyPlanner) -> None:
@@ -94,7 +94,7 @@ def main() -> None:
             else:
                 print("Please choose a number from 1 to 6.")
 
-        except (ValueError, KeyError) as error:
+        except (ValueError, KeyError, OSError) as error:
             print(f"Could not complete that action: {error}")
 
 

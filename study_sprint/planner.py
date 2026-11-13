@@ -19,6 +19,8 @@ class StudyPlanner:
             return []
         try:
             raw_tasks = json.loads(self.storage_path.read_text(encoding="utf-8"))
+            if not isinstance(raw_tasks, list):
+                raise ValueError("The tasks file must contain a JSON list.")
             return [Task.from_dict(item) for item in raw_tasks]
         except (json.JSONDecodeError, TypeError, KeyError, ValueError) as error:
             raise ValueError(
@@ -28,9 +30,11 @@ class StudyPlanner:
     def _save(self) -> None:
         self.storage_path.parent.mkdir(parents=True, exist_ok=True)
         payload = [task.to_dict() for task in self.tasks]
-        self.storage_path.write_text(
+        temporary_path = self.storage_path.with_name(self.storage_path.name + ".tmp")
+        temporary_path.write_text(
             json.dumps(payload, indent=2), encoding="utf-8"
         )
+        temporary_path.replace(self.storage_path)
 
     def _find(self, task_id: int) -> Task:
         for task in self.tasks:
@@ -48,7 +52,11 @@ class StudyPlanner:
         next_id = max((task.id for task in self.tasks), default=0) + 1
         task = Task(next_id, title, Priority(priority.lower()), due_date)
         self.tasks.append(task)
-        self._save()
+        try:
+            self._save()
+        except OSError:
+            self.tasks.pop()
+            raise
         return task
 
     def list_tasks(self, completed: bool | None = None) -> list[Task]:
@@ -60,13 +68,22 @@ class StudyPlanner:
     def complete_task(self, task_id: int) -> Task:
         task = self._find(task_id)
         task.completed = True
-        self._save()
+        try:
+            self._save()
+        except OSError:
+            task.completed = False
+            raise
         return task
 
     def delete_task(self, task_id: int) -> None:
         task = self._find(task_id)
+        original_index = self.tasks.index(task)
         self.tasks.remove(task)
-        self._save()
+        try:
+            self._save()
+        except OSError:
+            self.tasks.insert(original_index, task)
+            raise
 
     def progress(self) -> dict[str, int | float]:
         total = len(self.tasks)

@@ -9,5 +9,6 @@ env/
 .coverage
 htmlcov/
 tasks.json
+tasks.json.tmp
 .DS_Store
 Thumbs.db
